@@ -3,7 +3,15 @@
 A full-stack web application developed for the **ZepNest Software Developer Internship Assignment**. The application allows users to register, log in, create service requests, upload reference images, track request status, and manage their service requests through a secure and user-friendly dashboard.
 
 ---
+# Project Links
 
+GitHub Repository:
+https://github.com/Shaie1383/zepnest-service-request-app
+
+Demo Video:
+[https://drive.google.com/video-link](https://drive.google.com/file/d/1SlelP1KtAoXPt-7jzbnLVIVSs860HT9-/view)
+
+---
 # Project Overview
 
 The ZepNest Service Request Application simulates a home-service request management platform where users can raise service requests for different household services such as:
@@ -393,10 +401,11 @@ The application was tested for:
 
 # Author
 
-**Shaista Mulla**
+Shaista Mulla
 
-Developed as part of the **ZepNest Software Developer Internship Evaluation Project**.
+B.Tech – Computer Science & Engineering (AI & ML)
 
+Developed for the ZepNest Software Developer Internship Evaluation Project.
 ---
 
 # License
