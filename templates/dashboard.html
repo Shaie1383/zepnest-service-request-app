@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block title %}Dashboard | ZepNest{% endblock %}
+{% block content %}
+<div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
+    <div>
+        <h1 class="h2 fw-bold mb-1">Dashboard</h1>
+        <p class="text-muted mb-0">Manage your service requests in one place.</p>
+    </div>
+    <a href="{{ url_for('requests.create_request') }}" class="btn btn-primary btn-lg">New Request</a>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-6 col-xl-3"><div class="stat-card"><span>Total Requests</span><strong>{{ total_requests }}</strong></div></div>
+    <div class="col-md-6 col-xl-3"><div class="stat-card"><span>Pending</span><strong>{{ pending_count }}</strong></div></div>
+    <div class="col-md-6 col-xl-3"><div class="stat-card"><span>In Progress</span><strong>{{ in_progress_count }}</strong></div></div>
+    <div class="col-md-6 col-xl-3"><div class="stat-card"><span>Completed</span><strong>{{ completed_count }}</strong></div></div>
+</div>
+
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3 align-items-end">
+            <div class="col-lg-6">
+                <label class="form-label">Search</label>
+                <input type="text" name="q" value="{{ search_term }}" class="form-control form-control-lg" placeholder="Search title or category">
+            </div>
+            <div class="col-lg-4">
+                <label class="form-label">Sort by</label>
+                <select name="sort" class="form-select form-select-lg">
+                    <option value="created_desc" {% if sort_key == 'created_desc' %}selected{% endif %}>Newest first</option>
+                    <option value="created_asc" {% if sort_key == 'created_asc' %}selected{% endif %}>Oldest first</option>
+                    <option value="status_asc" {% if sort_key == 'status_asc' %}selected{% endif %}>Status A-Z</option>
+                    <option value="status_desc" {% if sort_key == 'status_desc' %}selected{% endif %}>Status Z-A</option>
+                    <option value="date_asc" {% if sort_key == 'date_asc' %}selected{% endif %}>Preferred date ascending</option>
+                    <option value="date_desc" {% if sort_key == 'date_desc' %}selected{% endif %}>Preferred date descending</option>
+                </select>
+            </div>
+            <div class="col-lg-2 d-grid">
+                <button class="btn btn-dark btn-lg" type="submit">Apply</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% if requests_list %}
+<div class="row g-4">
+    {% for item in requests_list %}
+    <div class="col-md-6 col-xl-4">
+        <div class="request-card h-100">
+            <div class="request-card__header d-flex justify-content-between align-items-start gap-2">
+                <div>
+                    <span class="badge rounded-pill text-bg-light mb-2">{{ item.category }}</span>
+                    <h2 class="h5 mb-1">{{ item.title }}</h2>
+                </div>
+                <span class="status-pill status-{{ item.status|lower|replace(' ', '-') }}">{{ item.status }}</span>
+            </div>
+            <p class="text-muted small mb-3">{{ item.description[:130] }}{% if item.description|length > 130 %}...{% endif %}</p>
+            <div class="meta-list small mb-3">
+                <div><strong>Date:</strong> {{ item.preferred_date.strftime('%d %b %Y') }}</div>
+                <div><strong>Time:</strong> {{ item.preferred_time.strftime('%I:%M %p') }}</div>
+            </div>
+            <div class="d-flex gap-2 flex-wrap mt-auto">
+                <a href="{{ url_for('requests.request_details', request_id=item.id) }}" class="btn btn-outline-primary btn-sm">View</a>
+                <a href="{{ url_for('requests.edit_request', request_id=item.id) }}" class="btn btn-outline-secondary btn-sm">Edit</a>
+                <form method="post" action="{{ url_for('requests.delete_request', request_id=item.id) }}" class="d-inline">
+                    <button type="submit" class="btn btn-outline-danger btn-sm js-confirm-delete">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% if pagination.pages > 1 %}
+<nav class="mt-4">
+    <ul class="pagination justify-content-center flex-wrap">
+        {% if pagination.has_prev %}
+        <li class="page-item"><a class="page-link" href="{{ url_for('requests.dashboard', page=pagination.prev_num, q=search_term, sort=sort_key) }}">Previous</a></li>
+        {% endif %}
+        {% for page_num in pagination.iter_pages() %}
+            {% if page_num %}
+                <li class="page-item {% if page_num == pagination.page %}active{% endif %}"><a class="page-link" href="{{ url_for('requests.dashboard', page=page_num, q=search_term, sort=sort_key) }}">{{ page_num }}</a></li>
+            {% endif %}
+        {% endfor %}
+        {% if pagination.has_next %}
+        <li class="page-item"><a class="page-link" href="{{ url_for('requests.dashboard', page=pagination.next_num, q=search_term, sort=sort_key) }}">Next</a></li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+{% else %}
+<div class="empty-state card border-0 shadow-sm p-5 text-center">
+    <h2 class="h4 fw-bold mb-2">No requests yet</h2>
+    <p class="text-muted mb-4">Create your first service request to get started.</p>
+    <a href="{{ url_for('requests.create_request') }}" class="btn btn-primary btn-lg">Create Request</a>
+</div>
+{% endif %}
+{% endblock %}

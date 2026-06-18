@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Register | ZepNest{% endblock %}
+{% block content %}
+<div class="auth-shell mx-auto">
+    <div class="card form-card shadow-sm border-0">
+        <div class="card-body p-4 p-md-5">
+            <h1 class="h3 fw-bold mb-2">Create your account</h1>
+            <p class="text-muted mb-4">Register to submit and track service requests.</p>
+            <form method="post" novalidate>
+                {{ form.hidden_tag() }}
+                <div class="mb-3">
+                    {{ form.name.label(class_="form-label") }}
+                    {{ form.name(class_="form-control form-control-lg" + (" is-invalid" if form.name.errors else ""), placeholder="Full name") }}
+                    {% for error in form.name.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
+                </div>
+                <div class="mb-3">
+                    {{ form.email.label(class_="form-label") }}
+                    {{ form.email(class_="form-control form-control-lg" + (" is-invalid" if form.email.errors else ""), placeholder="name@example.com") }}
+                    {% for error in form.email.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
+                </div>
+                <div class="mb-3">
+                    {{ form.password.label(class_="form-label") }}
+                    {{ form.password(class_="form-control form-control-lg" + (" is-invalid" if form.password.errors else ""), placeholder="Create a password") }}
+                    {% for error in form.password.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
+                </div>
+                <div class="mb-4">
+                    {{ form.confirm_password.label(class_="form-label") }}
+                    {{ form.confirm_password(class_="form-control form-control-lg" + (" is-invalid" if form.confirm_password.errors else ""), placeholder="Confirm password") }}
+                    {% for error in form.confirm_password.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
+                </div>
+                {{ form.submit(class_="btn btn-primary btn-lg w-100") }}
+            </form>
+            <p class="mt-4 mb-0 text-center text-muted">Already have an account? <a href="{{ url_for('auth.login') }}">Log in</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}
